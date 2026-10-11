@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PlateWise | Food Waste Prediction</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#predict"><span class="brand-mark">PW</span><span>PlateWise</span></a>
+    <nav aria-label="Main navigation">
+      <a href="#predict">Meal Prediction</a><a href="#analytics">Analytics</a>
+      <a href="#dataset">Dataset</a><a href="#reports">Reports</a>
+    </nav>
+    <span class="status-pill"><span></span> R model workspace</span>
+  </header>
+  <main>
+    <section id="predict" class="page active">
+      <div class="hero">
+        <div><p class="eyebrow">SMART CANTEEN OPERATIONS</p><h1>Prepare the right amount.<br><em>Waste less.</em></h1>
+          <p class="intro">Use attendance, menu popularity, and weather signals to make a confident preparation decision for the next meal.</p></div>
+        <div class="hero-note"><strong>Today’s focus</strong><span>Better predictions, smaller surplus.</span></div>
+      </div>
+      <div class="prediction-layout">
+        <form id="prediction-form" class="card form-card">
+          <div class="card-title"><div><p class="eyebrow">FORECAST INPUT</p><h2>Predict meal requirements</h2></div><span class="step">01 / 01</span></div>
+          <div class="form-grid">
+            <label>Meal date<input type="date" name="meal_date" required></label>
+            <label>Meal type<select name="meal_type"><option>Breakfast</option><option selected>Lunch</option><option>Dinner</option></select></label>
+            <label>Expected student attendance<input type="number" name="attendance" min="1" value="400" required></label>
+            <label>Menu popularity <span class="hint">1 low · 5 high</span><select name="popularity"><option>1</option><option>2</option><option>3</option><option selected>4</option><option>5</option></select></label>
+            <label>Day type<select name="day_type"><option selected>Weekday</option><option>Weekend</option></select></label>
+            <label>Is it a holiday?<select name="holiday"><option selected>No</option><option>Yes</option></select></label>
+            <label>Temperature (°C)<input type="number" name="temperature" value="27" step="0.1"></label>
+            <label>Rainfall (mm)<input type="number" name="rainfall" value="0" min="0" step="0.1"></label>
+          </div>
+          <details><summary>Historical outcome (optional, record after the meal)</summary><div class="form-grid optional"><label>Food prepared (kg)<input type="number" name="prepared_kg" min="0" step="0.1"></label><label>Consumed (kg)<input type="number" name="consumed_kg" min="0" step="0.1"></label><label>Wasted (kg)<input type="number" name="wasted_kg" min="0" step="0.1"></label></div></details>
+          <button class="primary-button" type="submit">Predict meal requirements <span>→</span></button>
+          <p id="model-status" class="model-status">Run R\train_model.R first to generate the model.</p>
+        </form>
+        <aside class="card result-card"><div class="card-title"><div><p class="eyebrow">DECISION SUPPORT</p><h2>Prediction results</h2></div><span class="live-dot">LIVE</span></div>
+          <div id="result-empty" class="empty-state"><div class="empty-icon">✦</div><strong>Your recommendation will appear here</strong><span>Enter the meal details and run a prediction.</span></div>
+          <div id="result-content" class="result-content hidden"><div class="metric-grid"><div class="metric"><span>Predicted consumption</span><strong id="predicted-consumption">—</strong><small>kg</small></div><div class="metric accent"><span>Recommended preparation</span><strong id="recommended-preparation">—</strong><small>kg</small></div><div class="metric"><span>Expected surplus</span><strong id="expected-surplus">—</strong><small>kg</small></div><div class="metric"><span>Waste risk</span><strong id="waste-risk">—</strong></div></div><div class="recommendation"><span>✦</span><p id="recommendation-text"></p></div></div>
+        </aside>
+      </div>
+    </section>
+    <section id="analytics" class="page"><div class="section-heading"><p class="eyebrow">HISTORICAL VIEW</p><h1>Waste analytics</h1><p>Understand which meal patterns create the most surplus.</p></div><div class="analytics-grid"><div class="card chart-card"><h2>Waste by meal type</h2><div class="bars"><div><span>Breakfast</span><i style="height:48%"></i><b>7.5 kg</b></div><div><span>Lunch</span><i style="height:82%"></i><b>10.8 kg</b></div><div><span>Dinner</span><i style="height:64%"></i><b>9.1 kg</b></div></div></div><div class="card insight-card"><p class="eyebrow">KEY INSIGHT</p><h2>Lunch needs the closest attention</h2><p>Lunch has the highest average recorded waste in the sample. Compare attendance and popularity before adding a safety margin.</p><a href="#reports">View recommendations →</a></div></div></section>
+    <section id="dataset" class="page"><div class="section-heading"><p class="eyebrow">DATA OPERATIONS</p><h1>Dataset management</h1><p>Inspect records and export your prediction history.</p></div><div class="card dataset-card"><div class="upload-box"><strong>Upload a CSV file</strong><span>Use the same columns as data/sample_meals.csv.</span><label class="secondary-button">Choose CSV<input id="csv-upload" type="file" accept=".csv" hidden></label><span id="upload-status"></span></div><div class="table-wrap"><table><thead><tr><th>Date</th><th>Meal</th><th>Attendance</th><th>Consumed</th><th>Wasted</th></tr></thead><tbody id="dataset-table"></tbody></table></div><button id="export-button" class="secondary-button">Export sample predictions ↓</button></div></section>
+    <section id="reports" class="page"><div class="section-heading"><p class="eyebrow">MODEL & ACTIONS</p><h1>Reports and recommendations</h1><p>Review model quality and turn forecasts into practical action.</p></div><div class="report-grid"><div class="card metrics-card"><h2>Regression model performance</h2><div class="report-metrics"><div><strong id="metric-mae">—</strong><span>MAE (kg)</span></div><div><strong id="metric-rmse">—</strong><span>RMSE (kg)</span></div><div><strong id="metric-r2">—</strong><span>R² score</span></div></div><p class="muted" id="trained-rows">Train the R model to see metrics.</p></div><div class="card actions-card"><h2>Prevention playbook</h2><ul><li><span>01</span><div><strong>Use a 5% safety margin</strong><p>Increase preparation only after considering attendance confidence and menu popularity.</p></div></li><li><span>02</span><div><strong>Review high-risk meals weekly</strong><p>Compare predicted surplus with actual wasted kilograms and adjust inputs.</p></div></li><li><span>03</span><div><strong>Record outcomes after service</strong><p>Actual prepared, consumed, and wasted quantities improve future training data.</p></div></li></ul></div></div></section>
+  </main>
+  <footer>PlateWise · Food Waste Prediction and Prevention System · Academic project</footer>
+  <script src="app.js"></script>
+</body>
+</html>

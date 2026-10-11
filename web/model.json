@@ -1,0 +1,35 @@
+{
+  "consumption": {
+    "(Intercept)": -38.77256655589653,
+    "attendance": 0.2463513381526828,
+    "popularity": 3.958642218481981,
+    "meal_typeLunch": -3.3617937244567284,
+    "meal_typeDinner": -3.893747639032649,
+    "day_typeWeekend": 4.587220191594701,
+    "holidayYes": 0.399501636838522,
+    "temperature": 0.9948890762473654,
+    "rainfall": -0.039887638786712386
+  },
+  "waste": {
+    "(Intercept)": 9.606831567388213,
+    "attendance": 0.025596418242399492,
+    "popularity": -2.2039650035146563,
+    "meal_typeLunch": 0.6719483834500934,
+    "meal_typeDinner": 1.34385136812603,
+    "day_typeWeekend": -1.6007574371594462,
+    "holidayYes": 2.663742868567347,
+    "temperature": -0.136971136262094,
+    "rainfall": 0.38458608282271306
+  },
+  "margin": 0.05,
+  "riskThresholds": {
+    "low": 7,
+    "high": 11
+  },
+  "metrics": {
+    "mae": 1.372004654519801,
+    "rmse": 1.802616942927515,
+    "r2": 0.994028543364214
+  },
+  "trainedRows": 20
+}
